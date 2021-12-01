@@ -1,0 +1,13 @@
+[all]
+
+[rhel]
+rhel8.dev.lan
+
+[win]
+winserver.dev.lan
+
+[win:vars]
+ansible_connection = winrm
+ansible_winrm_transport = basic
+ansible_winrm_server_cert_validation = ignore
+ansible_user = Administrator
