@@ -13,7 +13,7 @@
     - name: Install JBoss if on RHEL
       include_role:
         name: rhel_jboss
-      when: ansible_facts['os_family'] == "RHEL"
+      when: ansible_facts['os_family'] == "RedHat"
 
     # Similarly, we can install middleware on any OS by filtering
     # on the ansible_facts data which indicate the type of OS we are on.

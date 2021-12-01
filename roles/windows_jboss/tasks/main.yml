@@ -1,0 +1,48 @@
+- name: Create folder for install
+  win_file:
+    path: C:\Users\tim
+    state: directory
+
+- name: Fetch OpenJDK from webserver
+  win_get_url:
+    url: http://fedora.dev.lan/java-1.8.0-openjdk-1.8.0.312-2.b07.dev.redhat.windows.x86_64.msi
+    dest: C:\Users\tim\openjdk.msi
+
+- name: Install openjdk
+  win_package:
+    path: C:\Users\tim\openjdk.msi
+    state: present
+
+- name: Fetch JBoss archive from webserver
+  win_get_url:
+    url: http://fedora.dev.lan/jboss-eap-7.4.0.zip
+    dest: C:\Users\tim\jboss-eap-7.4.0.zip
+
+- name: Unzip jboss zip archive
+  win_unzip:
+    src: C:\Users\tim\jboss-eap-7.4.0.zip
+    dest: C:\Users\tim\
+
+- name: Fetch JBoss windows installer
+  win_get_url:
+    url: http://fedora.dev.lan/jbcs-jsvc-1.2.4-SP10-win6-x86_64.zip
+    dest: C:\Users\tim\jbcs-jsvc-1.2.4-SP10-win6-x86_64.zip
+
+- name: Unzip JBoss windows installer
+  win_unzip:
+    src: C:\Users\tim\jbcs-jsvc-1.2.4-SP10-win6-x86_64.zip
+    dest: C:\Users\tim\
+
+- name: Run JBoss windows installer for standalone
+  win_command: service.bat install /loglevel INFO /startup 
+  args:
+    chdir: C:\Users\tim\jboss-eap-7.4\bin\
+      
+- name: Set service to use LocalSystem account
+  win_service:
+    name: JBossEAP7
+    username: LocalSystem
+    start_mode: auto
+    state: started
+
+
