@@ -1,0 +1,34 @@
+- name: Install JBoss
+  yum:
+    name: "@jboss-eap7"
+    state: present
+  become: yes
+
+- name: Install JDK11
+  yum:
+    name: "@jboss-eap7-jdk11"
+    state: present
+  become: yes
+
+- name:  Enable eap7-standalone
+  systemd:
+    name: eap7-standalone.service
+    enabled: yes
+  become: yes
+
+- name: Copy files over
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/opt/rh/eap7/wildfly/standalone/{{ item }}"
+  loop:
+    - mgmt-groups.properties
+    - mgmt-users.properties
+    - standalone.xml
+  become: yes
+      
+- name:  Start eap7-standalone
+  systemd:
+    name: eap7-standalone.service
+    state: started
+  become: yes
+

@@ -5,10 +5,10 @@
       debug:
         var: ansible_facts['os_family']
 
-    - name: Install JBoss if on Windows
-      include_role:
-        name: windows_jboss
-      when: ansible_facts['os_family'] == "Windows"
+          #    - name: Install JBoss if on Windows
+          #      include_role:
+          #        name: windows_jboss
+          #      when: ansible_facts['os_family'] == "Windows"
 
     - name: Install JBoss if on RHEL
       include_role:
