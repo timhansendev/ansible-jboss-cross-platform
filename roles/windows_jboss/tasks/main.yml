@@ -48,6 +48,11 @@
     src: mgmt-groups.properties
     dest: C:\Users\tim\jboss-eap-7.4\standalone\configuration\mgmt-groups.properties
       
+- name: Copy over standalone configuration xml
+  win_copy: 
+    src: standalone.xml
+    dest: C:\Users\tim\jboss-eap-7.4\standalone\configuration\standalone.xml
+      
 - name: Set service to use LocalSystem account
   win_service:
     name: JBossEAP7
@@ -55,4 +60,13 @@
     start_mode: auto
     state: started
 
+- name: Allow mgmt port 9990 through firewall inbound
+  win_firewall_rule:
+    name: JBoss Management Port
+    localport: 9990
+    action: allow
+    direction: in
+    protocol: tcp
+    state: present
+    enabled: yes
 
