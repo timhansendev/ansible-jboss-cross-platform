@@ -37,6 +37,16 @@
   win_command: service.bat install /loglevel INFO /startup 
   args:
     chdir: C:\Users\tim\jboss-eap-7.4\bin\
+
+- name: Copy over default redhat user
+  win_copy: 
+    src: mgmt-users.properties
+    dest: C:\Users\tim\jboss-eap-7.4\standalone\configuration\mgmt-users.properties
+
+- name: Copy over default redhat group
+  win_copy: 
+    src: mgmt-groups.properties
+    dest: C:\Users\tim\jboss-eap-7.4\standalone\configuration\mgmt-groups.properties
       
 - name: Set service to use LocalSystem account
   win_service:
