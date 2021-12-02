@@ -38,20 +38,24 @@
   args:
     chdir: C:\Users\tim\jboss-eap-7.4\bin\
 
-- name: Copy over default redhat user
+- name: Copy over configuration files
   win_copy: 
-    src: mgmt-users.properties
-    dest: C:\Users\tim\jboss-eap-7.4\standalone\configuration\mgmt-users.properties
+    src: "{{ item }}"
+    dest: C:\Users\tim\jboss-eap-7.4\standalone\configuration\{{ item }}
+  loop:
+    - mgmt-users.properties
+    - mgmt-groups.properties
+    - standalone.xml
 
-- name: Copy over default redhat group
-  win_copy: 
-    src: mgmt-groups.properties
-    dest: C:\Users\tim\jboss-eap-7.4\standalone\configuration\mgmt-groups.properties
-      
-- name: Copy over standalone configuration xml
-  win_copy: 
-    src: standalone.xml
-    dest: C:\Users\tim\jboss-eap-7.4\standalone\configuration\standalone.xml
+- name: Ensure deployments folder exists
+  win_file:
+    path: C:\Users\tim\jboss-eap-7.4\standalone\deployments
+    state: directory
+
+- name: Fetch Application WAR from webserver
+  win_get_url:
+    url: http://fedora.dev.lan/helloworld-html5.war
+    dest: C:\Users\tim\jboss-eap-7.4\standalone\deployments\helloworld-html5.war
       
 - name: Set service to use LocalSystem account
   win_service:
@@ -70,3 +74,12 @@
     state: present
     enabled: yes
 
+- name: Allow app port 8080 through firewall inbound
+  win_firewall_rule:
+    name: App Port
+    localport: 8080
+    action: allow
+    direction: in
+    protocol: tcp
+    state: present
+    enabled: yes
